@@ -150,27 +150,20 @@ Class Admin_model extends CI_Model
 	     
 	}
     /******************************************Change Password************************************/
-    function matchOldPassword($userId, $oldPassword)
+    public function checkOldPass($email,$old_password)
     {
-        $this->db->select('user_Id, password');
-        $this->db->where('user_Id', $userId);
+
+        $this->db->where('e-mail', $email);
+        $this->db->where('password',$old_password);
         $query = $this->db->get('employees');
-
-        $user = $query->result();
-
-        if(!empty($user)){
-            if(verifyHashedPassword($oldPassword, $user[0]->password)){
-                return $user;
-            } else {
-                return array();
-            }
-        } else {
-            return array();
-        }
+        if($query->num_rows() > 0)
+            return 1;
+        else
+            return 0;
     }
-    function changePassword($userId, $userInfo)
+    function changePassword($email, $userInfo)
     {
-        $this->db->where('user_Id', $userId);
+        $this->db->where('e-mail', $email);
 
         $this->db->update('employees', $userInfo);
 

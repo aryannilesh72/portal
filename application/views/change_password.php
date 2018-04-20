@@ -1,4 +1,4 @@
-<?php $emp_details = $this->db->get_where('employees', array('user_id'=>$user_id))->result_array(); ?>
+
 <div class="container">
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -17,8 +17,16 @@
                     </div><!-- /.box-header -->
                     <!-- form start -->
 
-                    <form role="form" action="<?php echo site_url('AdminDashboard/changePassword/'.$user_id);?>" method="post">
+                    <form role="form" action="<?php echo site_url('AdminDashboard/changePassword/');?>" method="post">
                         <div class="box-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="email">Email</label>
+                                        <input type="email" class="form-control" id="email" placeholder="Email" name="e-mail" maxlength="70" required>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">

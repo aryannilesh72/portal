@@ -2,7 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class AdminDashboard extends CI_Controller {
-
+    protected $vendorId = '';
 	 function __construct()
 	 {
 	   parent::__construct();
@@ -16,7 +16,6 @@ class AdminDashboard extends CI_Controller {
 	 }
 	public function index(){
 		$data['title'] = 'Admin';
-		
 		$this->load->view('admin_templates/header.php',$data);
 		$this->load->view('admindashboard', $data);
 	}
@@ -468,15 +467,15 @@ class AdminDashboard extends CI_Controller {
 
     /******************************Change Password*************************************/
 
-    public function change_password($user_id=''){
+    public function change_password(){
 
         $data['title'] = 'Change Password';
-        $data['user_id'] = $user_id;
+
         $this->load->view('admin_templates/header.php',$data);
         $this->load->view('change_password',$data);
 
     }
-    function changePassword($user_id='')
+    function changePassword()
     {
         $this->load->library('form_validation');
 
@@ -492,18 +491,18 @@ class AdminDashboard extends CI_Controller {
         {
             $oldPassword = $this->input->post('oldPassword');
             $newPassword = $this->input->post('newPassword');
-
-            $resultPas = $this->admin_model->matchOldPassword($user_id, $oldPassword);
-            if(empty($resultPas))
+            $email = $this->input->post('e-mail');
+            $resultPas = $this->admin_model->checkOldPass($email, MD5($oldPassword));
+            if($resultPas==0)
             {
-                $this->session->set_flashdata('nomatch', 'Your old password not correct');
+                $this->session->set_flashdata('nomatch', 'Your old password is not correct');
                 redirect('AdminDashboard/change_password');
             }
             else
             {
-                $usersData = array('password'=>getHashedPassword($user_id,$newPassword));
+                $usersData = array('password'=>MD5($newPassword));
 
-                $result = $this->admin_model->changePassword($usersData);
+                $result = $this->admin_model->changePassword($email,$usersData);
 
                 if($result > 0) { $this->session->set_flashdata('success', 'Password updation successful'); }
                 else { $this->session->set_flashdata('error', 'Password updation failed'); }

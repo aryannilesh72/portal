@@ -3,6 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Login extends CI_Controller {
 
+
 	 function __construct()
 	 {
 	   parent::__construct();
@@ -34,6 +35,7 @@ class Login extends CI_Controller {
 			// row exist fetch userdata
 			$user=$this->user_model->login($username,$password);
 			$this->session->set_userdata('logged_in',$user);
+
 			if($user['su']=='1'){
 				redirect('admindashboard');
 			}else{
@@ -158,8 +160,8 @@ class Login extends CI_Controller {
     {
         $this->load->helper('url');
         $email= $_POST['email'];
-        $q = $this->db->query("select * from employees where 'e-mail'='" . $email . "'");
-        if ($q->num_rows > 0) {
+        $q = $this->db->query("select * from `employees` where `e-mail`='{$email}'");
+        if ($q->num_rows() > 0) {
             $r = $q->result();
             $user=$r[0];
             $this->resetpassword($user);
@@ -175,9 +177,9 @@ class Login extends CI_Controller {
     {
         date_default_timezone_set('GMT');
         $this->load->helper('string');
-        $password= random_string('alnum', 16);
-        $this->db->where('id', $user->id);
-        $this->db->update('users',array('password'=>MD5($password)));
+        $password= '12345';//random_string('alnum', 16)
+        $this->db->where('user_id', $user->user_id);
+        $this->db->update('employees',array('password'=>MD5($password)));
         $this->load->library('email');
         $this->email->from('cantreply@youdomain.com', 'Your name');
         $this->email->to($user->email);
